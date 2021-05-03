@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre, Language
+from django.views import generic
 
 
 # Create your views here.
@@ -21,14 +22,25 @@ def index(request):
 
     num_of_languages = Language.objects.count()
 
+    num_of_word_occurrence = Book.objects.filter(title__iexact='Angels and Demons').count()
+
     context = {
         'num_books': num_books,
         'num_instances': num_instances,
         'num_instances_available': num_instances_available,
         'num_authors': num_authors,
         'num_of_genres': num_of_genres,
-        'num_of_languages': num_of_languages
+        'num_of_languages': num_of_languages,
+        'num_of_word_occurrence': num_of_word_occurrence
     }
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+
+class BookListView(generic.ListView):
+    model = Book
+
+
+class BookDetailView(generic.DetailView):
+    model = Book
